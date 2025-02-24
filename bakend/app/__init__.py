@@ -7,10 +7,10 @@ import os
 print(f"SECRET_KEY LOADED: {os.getenv('SECRET_KEY')}")
 
 
-# Load environment variables
+
 load_dotenv()
 
-# Initialize extensions
+
 db = SQLAlchemy()
 migrate = Migrate()
 mail = Mail()
@@ -33,11 +33,11 @@ def create_app():
     migrate.init_app(app, db)
     mail.init_app(app)
 
-    # ✅ Register Blueprints
-    from app.auth import auth_blueprint  # Auth routes
+    
+    from app.auth import auth_blueprint  
     app.register_blueprint(auth_blueprint, url_prefix='/api/auth')
 
-    from app.routes import bp  # Main routes
+    from app.routes import bp  
     app.register_blueprint(bp, url_prefix='/api')
 
     return app

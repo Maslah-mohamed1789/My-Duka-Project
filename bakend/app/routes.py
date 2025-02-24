@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify, request, current_app
 from .models import Product, SupplyRequest, User
-from app import db  # Import db from app/__init__.py
+from app import db  
 from functools import wraps
-import jwt  # Ensure you have PyJWT installed: `pip install PyJWT`
+import jwt  
 
 bp = Blueprint('main', __name__)
 
@@ -21,7 +21,7 @@ def token_required(f):
             if not current_user:
                 return jsonify({'message': 'Invalid token!'}), 401
 
-            print("Decoded Token:", data)  # ✅ Debugging: See if role exists in the token
+            print("Decoded Token:", data)  
 
         except jwt.ExpiredSignatureError:
             return jsonify({'message': 'Token has expired!'}), 401
@@ -36,7 +36,7 @@ def token_required(f):
 @bp.route('/product', methods=['POST'])
 @token_required
 def add_product(current_user):
-    if current_user.role not in ['clerk', 'admin']:  # ✅ Allow admin too
+    if current_user.role not in ['clerk', 'admin']:  
         return jsonify({'message': 'Permission denied'}), 403
     data = request.get_json()
     new_product = Product(
