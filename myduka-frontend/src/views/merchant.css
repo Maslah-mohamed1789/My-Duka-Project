@@ -1,0 +1,134 @@
+.merchant-container {
+  display: flex;
+  height: 100vh;
+  background-color: #f4f4f4;
+}
+
+/* Sidebar Styling */
+.sidebar {
+  width: 250px;
+  background-color: #2c3e50;
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.merchant-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+
+.sidebar ul li {
+  margin: 15px 0;
+  text-align: center;
+}
+
+.sidebar ul li button {
+  width: 100%;
+  padding: 10px;
+  background-color: #34495e;
+  color: white;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.sidebar ul li button:hover {
+  background-color: #1abc9c;
+}
+
+/* Main Content Styling */
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Quick Stats Section */
+.dashboard-overview h1 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.quick-stats {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.stat-card {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  min-width: 150px;
+}
+
+.stat-card h3 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.stat-card p {
+  font-size: 22px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+.transaction-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  margin: 20px 0;
+}
+
+.transaction-form input, .transaction-form select {
+  margin: 5px 0;
+  padding: 10px;
+}
+
+.transaction-list table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.transaction-list th, .transaction-list td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+.transaction-list button {
+  margin: 3px;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.transaction-list button:nth-child(1) {
+  background-color: #f0ad4e;
+  color: white;
+}
+
+.transaction-list button:nth-child(2) {
+  background-color: #d9534f;
+  color: white;
+}
+
