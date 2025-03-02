@@ -1,0 +1,53 @@
+/* src/components/Inventory/AssignedInventory.css */
+
+.assigned-inventory-container {
+  max-width: 90%;
+  margin: 20px auto;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+  overflow-x: auto;
+}
+
+.assigned-inventory-title {
+  text-align: center;
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.inventory-table th,
+.inventory-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+}
+
+.inventory-table th {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+.inventory-table tbody tr:nth-child(even) {
+  background-color: #f8f8f8;
+}
+
+.inventory-table tbody tr:hover {
+  background-color: #e9ecef;
+  transition: background 0.2s ease-in-out;
+}

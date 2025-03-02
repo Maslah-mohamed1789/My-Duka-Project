@@ -1,0 +1,45 @@
+/* src/components/Navbar.css */
+.navbar {
+  display: flex;
+  justify-content: space-between; /* Space between left and right */
+  align-items: center;
+  background-color: #333;
+  padding: 10px 20px;
+}
+
+.navbar-left {
+  flex: 1; /* Takes up the remaining space on the left */
+}
+
+.navbar-right {
+  display: flex;
+}
+
+.navbar-links {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.navbar-links li {
+  margin-left: 20px;
+}
+
+.navbar-link {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.navbar-link:hover {
+  color: #f2a007;
+}
+
+.navbar-brand {
+  color: white;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin: 0;
+}

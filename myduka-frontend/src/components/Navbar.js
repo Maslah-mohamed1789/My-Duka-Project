@@ -1,26 +1,24 @@
+// src/components/Navbar.js
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './Navbar.css';
 
-const Navbar = ({ user, onLogout }) => {
-    return (
-        <nav className="bg-blue-600 text-white p-4 flex justify-between items-center">
-            <h1 className="text-lg font-bold">MyDuka</h1>
-            <div className="flex items-center space-x-4">
-                {user ? (
-                    <>
-                        <span>Welcome, {user.username}</span>
-                        <Link to="/dashboard">Dashboard</Link>
-                        {user.role === 'admin' && <Link to="/admin">Admin</Link>}
-                        {user.role === 'merchant' && <Link to="/merchant">Merchant</Link>}
-                        {user.role === 'clerk' && <Link to="/clerk">Clerk</Link>}
-                        <button onClick={onLogout} className="bg-red-500 px-3 py-1 rounded">Logout</button>
-                    </>
-                ) : (
-                    <Link to="/">Login</Link>
-                )}
-            </div>
-        </nav>
-    );
+const Navbar = () => {
+  return (
+    <nav className="navbar">
+      <div className="navbar-left">
+        <h1 className="navbar-brand">MyDuka</h1>
+      </div>
+      <div className="navbar-right">
+        <ul className="navbar-links">
+          <li><Link to="/" className="navbar-link">Home</Link></li>
+          <li><Link to="/login" className="navbar-link">Login</Link></li>
+          <li><Link to="/register_clerk" className="navbar-link">Register</Link></li>
+          <li><Link to="/invite_admin" className="navbar-link">Invite Admin</Link></li>
+        </ul>
+      </div>
+    </nav>
+  );
 };
 
 export default Navbar;

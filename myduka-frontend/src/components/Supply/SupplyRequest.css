@@ -1,0 +1,110 @@
+/* General styling for the container */
+div {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Error message styling */
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #f5c6cb;
+  font-size: 14px;
+}
+
+/* Table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #f9f9f9;
+}
+
+th, td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: #4CAF50;
+  color: white;
+}
+
+td {
+  background-color: #fff;
+}
+
+/* Styling for buttons */
+td button {
+  margin: 0 5px;
+  padding: 6px 10px;  /* Smaller padding for compact size */
+  font-size: 14px;    /* Reduced font size */
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+td button:hover {
+  opacity: 0.8;
+  transform: translateY(-2px);  /* Subtle lifting effect */
+}
+
+/* General button color */
+button {
+  background-color: #4CAF50;   /* Green for approve */
+  color: white;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+button:active {
+  background-color: #3e8e41;
+}
+
+/* Decline button */
+button:nth-child(2) {
+  background-color: #e57373;  /* Light red for decline */
+}
+
+button:nth-child(2):hover {
+  background-color: #e53935;
+}
+
+button:nth-child(2):active {
+  background-color: #c62828;
+}
+
+/* Delete button */
+button:nth-child(3) {
+  background-color: #ffb74d;  /* Soft orange for delete */
+}
+
+button:nth-child(3):hover {
+  background-color: #fb8c00;
+}
+
+button:nth-child(3):active {
+  background-color: #f57c00;
+}
+
+/* Styling for the table when empty */
+table tbody tr.empty {
+  text-align: center;
+  font-style: italic;
+  color: #999;
+}

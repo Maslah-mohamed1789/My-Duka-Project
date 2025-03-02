@@ -1,0 +1,67 @@
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #2C3E50;
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sidebar h2 {
+  color: #ECF0F1;
+  margin-bottom: 30px;  /* Added space after the title */
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+  flex-grow: 1;  /* This allows the links to take up remaining space */
+}
+
+.sidebar ul li {
+  margin: 20px 0;  /* Increased space between the links */
+}
+
+.sidebar ul li a {
+  color: #ECF0F1;
+  text-decoration: none;
+  font-size: 18px;
+  transition: color 0.3s;
+}
+
+.sidebar ul li a:hover {
+  color: #3498DB;
+}
+
+.logout-btn {
+  background-color: #E74C3C;
+  color: white;
+  padding: 12px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+  transition: background-color 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: #C0392B;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #ECF0F1;
+  overflow-y: auto;
+}
+
+.main-content h1 {
+  font-size: 32px;
+  margin-bottom: 20px;
+}

@@ -1,0 +1,136 @@
+/* src/components/Homepage.css */
+.homepage {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f7f7f7;
+}
+
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(135deg, #3498db, #8e44ad);
+  color: white;
+  padding: 100px 30px;
+  text-align: center;
+}
+
+.homepage-title {
+  font-size: 4rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.homepage-description {
+  font-size: 1.3rem;
+  max-width: 800px;
+  margin: 0 auto 30px;
+  line-height: 1.6;
+}
+
+.cta-button {
+  background-color: #f39c12;
+  color: white;
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: #e67e22;
+}
+
+/* Features Section */
+.features-section {
+  padding: 60px 30px;
+  background-color: white;
+  text-align: center;
+}
+
+.features-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 40px;
+  color: #333;
+}
+
+.features-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.feature-item {
+  width: 300px;
+  background-color: #ecf0f1;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.feature-item:hover {
+  transform: translateY(-10px);
+}
+
+.feature-icon {
+  font-size: 3rem;
+  color: #3498db;
+  margin-bottom: 20px;
+}
+
+.feature-item h3 {
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+}
+
+.feature-item p {
+  font-size: 1.1rem;
+  color: #555;
+}
+
+/* Footer Section */
+.footer {
+  background-color: #34495e;
+  color: white;
+  text-align: center;
+  padding: 20px 30px;
+}
+
+.footer p {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 80px 20px;
+  }
+
+  .homepage-title {
+    font-size: 3rem;
+  }
+
+  .homepage-description {
+    font-size: 1.1rem;
+  }
+
+  .cta-button {
+    font-size: 1rem;
+  }
+
+  .features-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .feature-item {
+    width: 80%;
+    margin-bottom: 20px;
+  }
+}

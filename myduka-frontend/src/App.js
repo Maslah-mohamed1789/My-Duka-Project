@@ -1,48 +1,48 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Provider, useSelector } from 'react-redux';
-import store from './store';
-import AdminDashboard from './views/AdminDashboard';
-import MerchantDashboard from './views/MerchantDashboard';
-import ClerkDashboard from './views/ClerkDashboard';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import Navbar from './components/Navbar';
-import LoginPage from './views/LoginPage';
-import SignupPage from './views/SignupPage';
-
-const Dashboard = () => {
-  const user = useSelector((state) => state.auth.user);
-
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return (
-    <div>
-      <Navbar user={user} />
-      <div className="p-4">
-        {user.role === 'admin' && <AdminDashboard />}
-        {user.role === 'merchant' && <MerchantDashboard />}
-        {user.role === 'clerk' && <ClerkDashboard />}
-      </div>
-    </div>
-  );
-};
+import Homepage from './components/Homepage';
+import Login from './components/Auth/Login';
+import RegisterClerk from './components/Auth/RegisterClerk';
+import InviteAdmin from './components/Auth/InviteAdmin';
+import RegisterWithToken from './components/Auth/RegisterWithToken';
+import AdminDashboard from './components/Dashboard/AdminDashboard';
+import MerchantDashboard from './components/Dashboard/MerchantDashboard'; // Updated path
+import ClerkDashboard from './components/Dashboard/ClerkDashboard';
+import NotFound from './pages/NotFound';
+import ErrorBoundary from './components/ErrorBoundary'; // Import your ErrorBoundary
 
 const App = () => {
+  const userRole = useSelector((state) => state.auth.user?.role); // Get user role from Redux store
+  console.log("User  Role:", userRole); // Debugging log
+
   return (
-    <Provider store={store}>
-      <Router>
+    <Router>
+      <Navbar />
+      <ErrorBoundary> {/* Wrap your Routes with ErrorBoundary */}
         <Routes>
-          <Route path="/" element={<SignupPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/merchant" element={<MerchantDashboard />} />
-          <Route path="/clerk" element={<ClerkDashboard />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/" element={<Homepage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register_clerk" element={<RegisterClerk />} />
+          <Route path="/invite_admin" element={<InviteAdmin />} />
+          <Route path="/register_with_token/:token" element={<RegisterWithToken />} />
+          
+          {/* Dynamic routing based on user role */}
+          {userRole === 'admin' && (
+            <Route path="/dashboard/*" element={<AdminDashboard />} />
+          )}
+          {userRole === 'Merchant' && (
+            <Route path="/dashboard/*" element={<MerchantDashboard />} />
+          )}
+          {userRole === 'clerk' && (
+            <Route path="/dashboard/*" element={<ClerkDashboard />} />
+          )}
+          
+          <Route path="*" element={<NotFound />} />
         </Routes>
-      </Router>
-    </Provider>
+      </ErrorBoundary>
+    </Router>
   );
 };
 
