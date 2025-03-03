@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'postgresql://myduka_user:sheenaMUGO2004@localhost/myduka')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'postgresql://myduka_rqgk_user:QzTJnkWlMJTmGYJhbVayGMLe4oepf7yn@dpg-cv2prhnnoe9s73b9g8t0-a/myduka_rqgk')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = os.getenv('SECRET_KEY', 'your_secret_key')
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'your_jwt_secret_key')
