@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000'; // Your backend API URL
+const API_URL = 'https://my-duka-project-4.onrender.com'; // Your backend API URL
 
 const initialState = {
     user: null,
