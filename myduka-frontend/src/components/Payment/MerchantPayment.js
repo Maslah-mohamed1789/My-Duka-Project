@@ -9,7 +9,7 @@ const MerchantPayments = () => {
 
   // Fetch merchant payments
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/payment", {
+    fetch("https://my-duka-project-g25b.onrender.com/payment", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,

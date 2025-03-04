@@ -32,7 +32,7 @@ const App = () => {
           {userRole === 'admin' && (
             <Route path="/dashboard/*" element={<AdminDashboard />} />
           )}
-          {userRole === 'Merchant' && (
+          {userRole === 'merchant' && (
             <Route path="/dashboard/*" element={<MerchantDashboard />} />
           )}
           {userRole === 'clerk' && (

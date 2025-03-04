@@ -23,7 +23,7 @@ const AddInventory = () => {
        setSuccess('');
 
        try {
-           const response = await axios.post('http://127.0.0.1:5000/inventory', {
+           const response = await axios.post('https://my-duka-project-g25b.onrender.com/inventory', {
                product_name: productName,
                quantity_received: quantityReceived,
                quantity_in_stock: quantityInStock,

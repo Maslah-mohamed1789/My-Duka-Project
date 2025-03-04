@@ -16,7 +16,7 @@ const SalesForm = () => {
           return;
         }
 
-        const response = await fetch("http://127.0.0.1:5000/inventory", {
+        const response = await fetch("https://my-duka-project-g25b.onrender.com/inventory", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -53,7 +53,7 @@ const SalesForm = () => {
     };
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/sales", {
+      const response = await fetch("https://my-duka-project-g25b.onrender.com/sales", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

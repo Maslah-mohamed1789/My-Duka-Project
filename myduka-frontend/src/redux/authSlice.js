@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_URL = 'postgresql://myduka_rqgk_user:QzTJnkWlMJTmGYJhbVayGMLe4oepf7yn@dpg-cv2prhnnoe9s73b9g8t0-a/myduka_rqgk=https://my-duka-project-5.onrender.com'; // Your backend API URL
+const API_URL = 'https://my-duka-project-g25b.onrender.com'; // Your backend API URL
 
 const initialState = {
     user: null,

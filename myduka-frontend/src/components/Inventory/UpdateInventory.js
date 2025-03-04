@@ -16,7 +16,7 @@ const UpdateInventory = () => {
         const fetchInventoryItem = async () => {
             setIsLoading(true); // Set loading state
             try {
-                const response = await axios.get(`http://127.0.0.1:5000/inventory/${inventoryId}`, {
+                const response = await axios.get(`https://my-duka-project-g25b.onrender.com/inventory/${inventoryId}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
@@ -38,7 +38,7 @@ const UpdateInventory = () => {
 
         try {
             setIsLoading(true); // Set loading state during the update
-            const response = await axios.put(`http://127.0.0.1:5000/inventory/${inventoryId}`, inventoryItem, {
+            const response = await axios.put(`https://my-duka-project-g25b.onrender.com/inventory/${inventoryId}`, inventoryItem, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }

@@ -23,7 +23,7 @@ const ProcessPayment = () => {
         }
 
         try {
-            const response = await axios.post('http://127.0.0.1:5000/payment', {
+            const response = await axios.post('https://my-duka-project-g25b.onrender.com/payment', {
                 inventory_id: inventoryId,
                 status: status,
                 amount: amount // Send the amount along with inventory_id and status

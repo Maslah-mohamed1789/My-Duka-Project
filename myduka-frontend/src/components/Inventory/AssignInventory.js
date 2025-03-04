@@ -14,7 +14,7 @@ const AssignInventory = () => {
         const fetchClerks = async () => {
             // Fetch clerks from the backend
             // Assuming you have an endpoint to get clerks
-            const response = await axios.get('http://127.0.0.1:5000/clerks', {
+            const response = await axios.get('https://my-duka-project-g25b.onrender.com/clerks', {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -23,7 +23,7 @@ const AssignInventory = () => {
         };
 
         const fetchInventory = async () => {
-            const response = await axios.get('http://127.0.0.1:5000/inventory', {
+            const response = await axios.get('https://my-duka-project-g25b.onrender.com/inventory', {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -37,7 +37,7 @@ const AssignInventory = () => {
 
     const handleAssign = async () => {
       try {
-          await axios.post('http://127.0.0.1:5000/inventory/assign', {
+          await axios.post('https://my-duka-project-g25b.onrender.com/inventory/assign', {
               clerk_id: selectedClerk,
               inventory_ids: selectedInventory
           }, {

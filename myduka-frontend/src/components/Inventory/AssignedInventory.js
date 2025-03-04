@@ -10,7 +10,7 @@ const AssignedInventory = () => {
     useEffect(() => {
         const fetchInventory = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:5000/inventory/assigned', {
+                const response = await axios.get('https://my-duka-project-g25b.onrender.com/inventory/assigned', {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }

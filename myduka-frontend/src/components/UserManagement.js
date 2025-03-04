@@ -10,7 +10,7 @@ const UserManagement = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:5000/users', {
+                const response = await axios.get('https://my-duka-project-g25b.onrender.com/users', {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`  // Use the correct key for the token
                     }
@@ -32,7 +32,7 @@ const UserManagement = () => {
     // Delete user (clerk)
     const deleteUser  = async (id) => {
         try {
-            await axios.delete(`http://127.0.0.1:5000/users/${id}`, {
+            await axios.delete(`https://my-duka-project-g25b.onrender.com/users/${id}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`  // Use the correct key for the token
                 }

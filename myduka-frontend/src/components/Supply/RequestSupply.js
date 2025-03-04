@@ -14,7 +14,7 @@ const RequestSupply = () => {
 
     const fetchSupplyRequests = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:5000/supply_request', {
+            const response = await axios.get('https://my-duka-project-g25b.onrender.com/supply_request', {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },

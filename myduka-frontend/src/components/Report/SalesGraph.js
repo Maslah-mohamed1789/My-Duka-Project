@@ -14,7 +14,7 @@ const SalesGraph = ({ storeId }) => {
     useEffect(() => {
         const fetchSalesData = async () => {
             try {
-                const response = await axios.get(`http://127.0.0.1:5000/store_sales_data/${storeId}`);
+                const response = await axios.get(`https://my-duka-project-g25b.onrender.com/store_sales_data/${storeId}`);
                 setGraphData(response.data);
             } catch (err) {
                 setError('Failed to load graph data');

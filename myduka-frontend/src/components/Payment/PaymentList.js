@@ -14,7 +14,7 @@ const PaymentList = () => {
     useEffect(() => {
         const fetchPayments = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:5000/payment', {
+                const response = await axios.get('https://my-duka-project-g25b.onrender.com/payment', {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
@@ -41,7 +41,7 @@ const PaymentList = () => {
         }
 
         try {
-            const response = await axios.post('http://127.0.0.1:5000/payment', {
+            const response = await axios.post('https://my-duka-project-g25b.onrender.com/payment', {
                 inventory_id: inventoryId,
                 status: status,
                 amount: parsedAmount // Send the parsed amount along with inventory_id and status
@@ -53,7 +53,7 @@ const PaymentList = () => {
 
             setSuccess(response.data.message);  // Success message
             // Optionally refresh the payment list after posting
-            const newPaymentsResponse = await axios.get('http://127.0.0.1:5000/payment', {
+            const newPaymentsResponse = await axios.get('https://my-duka-project-g25b.onrender.com/payment', {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }

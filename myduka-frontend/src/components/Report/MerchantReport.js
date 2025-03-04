@@ -6,7 +6,7 @@ const MerchantReports = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/report/merchant_reports", {
+    fetch("https://my-duka-project-g25b.onrender.com/report/merchant_reports", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,

@@ -15,7 +15,7 @@ const AdminList = () => {
 
     const fetchAdmins = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:5000/admins', {
+            const response = await axios.get('https://my-duka-project-g25b.onrender.com/admins', {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}` // Assuming you store the token in localStorage
                 }
@@ -33,7 +33,7 @@ const AdminList = () => {
 
     const handleDeactivate = async (id) => {
         try {
-            await axios.patch(`http://127.0.0.1:5000/deactivate_admin/${id}`, {}, {
+            await axios.patch(`https://my-duka-project-g25b.onrender.com/deactivate_admin/${id}`, {}, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -47,7 +47,7 @@ const AdminList = () => {
     const handleDelete = async (id) => {
         if (window.confirm('Are you sure you want to delete this admin?')) {
             try {
-                await axios.delete(`http://127.0.0.1:5000/delete_admin/${id}`, {
+                await axios.delete(`https://my-duka-project-g25b.onrender.com/delete_admin/${id}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
