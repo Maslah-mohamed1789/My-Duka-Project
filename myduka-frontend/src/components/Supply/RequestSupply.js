@@ -31,7 +31,7 @@ const RequestSupply = () => {
 
         try {
             const response = await axios.post(
-                'http://127.0.0.1:5000/supply_request',
+                'https://my-duka-project-g25b.onrender.com/supply_request',
                 {
                     product_name: productName,
                     quantity_requested: quantity

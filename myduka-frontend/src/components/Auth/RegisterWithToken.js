@@ -13,7 +13,7 @@ const RegisterWithToken = () => {
         e.preventDefault();
         const data = { username, password };
         try {
-            const response = await fetch(`http://localhost:5000/register_with_token/${token}`, {
+            const response = await fetch(`https://my-duka-project-g25b.onrender.com/register_with_token/${token}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

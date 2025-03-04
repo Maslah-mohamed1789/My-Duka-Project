@@ -9,7 +9,7 @@ const InviteAdmin = () => {
         const token = localStorage.getItem('token'); // Assuming you store the token in local storage
 
         try {
-            const response = await fetch('http://localhost:5000/invite_admin', {
+            const response = await fetch('https://my-duka-project-g25b.onrender.com/invite_admin', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

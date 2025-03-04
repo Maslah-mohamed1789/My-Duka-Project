@@ -13,7 +13,7 @@ const RegisterClerk = () => {
         const token = localStorage.getItem('token'); 
 
         try {
-            const response = await fetch('http://localhost:5000/register_clerk', {
+            const response = await fetch('https://my-duka-project-g25b.onrender.com/register_clerk', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

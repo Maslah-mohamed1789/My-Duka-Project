@@ -25,13 +25,13 @@ const SupplyRequestList = () => {
 
     const handleUpdateStatus = async (requestId, status) => {
         try {
-            await axios.put(`http://127.0.0.1:5000/supply_request/${requestId}`, { status }, {
+            await axios.put(`https://my-duka-project-g25b.onrender.com/supply_request/${requestId}`, { status }, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
             // Re-fetch the list after updating
-            const updatedRequests = await axios.get('http://127.0.0.1:5000/supply_request', {
+            const updatedRequests = await axios.get('https://my-duka-project-g25b.onrender.com/supply_request', {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
@@ -44,13 +44,13 @@ const SupplyRequestList = () => {
 
     const handleDeleteRequest = async (requestId) => {
         try {
-            await axios.delete(`http://127.0.0.1:5000/supply_request/${requestId}`, {
+            await axios.delete(`https://my-duka-project-g25b.onrender.com/supply_request/${requestId}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
             // Re-fetch the list after deletion
-            const updatedRequests = await axios.get('http://127.0.0.1:5000/supply_request', {
+            const updatedRequests = await axios.get('https://my-duka-project-g25b.onrender.com/supply_request', {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
