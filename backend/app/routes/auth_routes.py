@@ -98,7 +98,11 @@ def send_invitation_email(email, token):
     """
     Sends an email invitation to the new Admin with a registration link.
     """
-    msg = Message('Admin Registration Invitation', recipients=[email])
+    msg = Message(
+        'Admin Registration Invitation',
+        sender=app.config['MAIL_DEFAULT_SENDER'],  # Explicitly set sender
+        recipients=[email]
+    )
     link = f"http://yourfrontend.com/register_with_token/{token}"
     msg.body = f'Click the link to register: {link}'
     mail.send(msg)
