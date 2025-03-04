@@ -37,6 +37,7 @@ def create_app():
     from app.routes.payment_routes import payment_bp
     from app.routes.report_routes import report_bp
     from app.routes.sales_routes import sales_bp
+    from app.routes.store_routes import store_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(inventory_bp, url_prefix='/inventory')
@@ -44,6 +45,7 @@ def create_app():
     app.register_blueprint(payment_bp, url_prefix='/payment')
     app.register_blueprint(report_bp, url_prefix='/report')
     app.register_blueprint(sales_bp, url_prefix='/sales')
+    app.register_blueprint(store_bp, url_prefix='/store') 
 
     return app
     
