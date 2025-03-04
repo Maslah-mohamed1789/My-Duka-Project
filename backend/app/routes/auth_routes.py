@@ -11,25 +11,32 @@ auth_bp = Blueprint('auth', __name__)
 def create_serializer(secret_key):
     return URLSafeTimedSerializer(secret_key)
 
-# Register Merchant (Self-registration, no Admin approval needed)
 @auth_bp.route('/register_merchant', methods=['POST'])
 def register_merchant():
     """
-    Allows a new user to register as a Merchant without requiring admin approval.
+    Allows a new Merchant to register themselves.
     """
     data = request.get_json()
-    
-    # Check if the email is already in use
+
+    # Check if email is already in use
     existing_user = User.query.filter_by(email=data['email']).first()
     if existing_user:
         return jsonify({'message': 'Email already registered'}), 400
-    
+
+    # Hash password
     hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
-    user = User(username=data['username'], email=data['email'], password_hash=hashed_password, role='Merchant')
-    
-    db.session.add(user)
+
+    # Create new merchant
+    merchant = User(
+        username=data['username'],
+        email=data['email'],
+        password_hash=hashed_password,
+        role='merchant'
+    )
+
+    db.session.add(merchant)
     db.session.commit()
-    
+
     return jsonify({'message': 'Merchant registered successfully'}), 201
 
 
