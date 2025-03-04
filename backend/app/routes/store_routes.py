@@ -54,3 +54,5 @@ def delete_store(store_id):
     db.session.delete(store)
     db.session.commit()
     return jsonify({'message': 'Store deleted'}), 200
+
+    
