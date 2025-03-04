@@ -19,7 +19,7 @@ def create_app():
     app = Flask(__name__)
 
     # Load configuration based on environment
-    env_config = os.getenv('FLASK_ENV', 'development')
+    env_config = os.environ.get('FLASK_ENV')
     app.config.from_object(config[env_config])
 
     # Initialize extensions
