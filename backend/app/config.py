@@ -21,7 +21,8 @@ class Config:
     MAIL_USE_SSL = False  
     MAIL_USERNAME=sheenamugo04@gmail.com
     MAIL_PASSWORD=krcoclzzzzjbnmqh  # Use your generated App Password (no spaces)
-    MAIL_DEFAULT_SENDER=sheenamugo04@gmail.com
+    MAIL_DEFAULT_SENDER = "sheenamugo04@gmail.com"
+
 
 class DevelopmentConfig(Config):
     DEBUG = True
