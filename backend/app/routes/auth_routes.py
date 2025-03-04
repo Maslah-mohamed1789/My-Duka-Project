@@ -25,7 +25,7 @@ def register_merchant():
         return jsonify({'message': 'Email already registered'}), 400
     
     hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
-    user = User(username=data['username'], email=data['email'], password_hash=hashed_password, role='merchant')
+    user = User(username=data['username'], email=data['email'], password_hash=hashed_password, role='Merchant')
     
     db.session.add(user)
     db.session.commit()
