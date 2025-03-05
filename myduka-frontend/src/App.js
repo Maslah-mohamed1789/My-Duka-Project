@@ -4,9 +4,10 @@ import { useSelector } from 'react-redux';
 import Navbar from './components/Navbar';
 import Homepage from './components/Homepage';
 import Login from './components/Auth/Login';
-import RegisterClerk from './components/Auth/RegisterClerk';
+
 import InviteAdmin from './components/Auth/InviteAdmin';
-import RegisterWithToken from './components/Auth/RegisterWithToken';
+
+import Register from './components/Auth/Register';
 import AdminDashboard from './components/Dashboard/AdminDashboard';
 import MerchantDashboard from './components/Dashboard/MerchantDashboard';
 import ClerkDashboard from './components/Dashboard/ClerkDashboard';
@@ -24,9 +25,9 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/register_clerk" element={<RegisterClerk />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/invite_admin" element={<InviteAdmin />} />
-          <Route path="/register_with_token/:token" element={<RegisterWithToken />} />
+         
           
           {/* Dynamic routing based on user role */}
           {userRole === 'admin' && (
