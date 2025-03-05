@@ -20,15 +20,25 @@ def create_store():
     db.session.commit()
     return jsonify({'message': 'Store created', 'store_id': new_store.id}), 201
 
-# Get all stores for the authenticated merchant
 @store_bp.route('/stores', methods=['GET'])
 @jwt_required()
 def get_stores():
     merchant_id = get_jwt_identity()
     stores = Store.query.filter_by(merchant_id=merchant_id).all()
-    return jsonify([store.to_dict() for store in stores]), 200
+    
+    # Manually construct the response data
+    stores_data = [
+        {
+            'id': store.id,
+            'name': store.name,
+            'location': store.location,
+            'merchant_id': store.merchant_id
+        }
+        for store in stores
+    ]
+    
+    return jsonify(stores_data), 200
 
-# Get a specific store by ID (only if it belongs to the merchant)
 @store_bp.route('/stores/<int:store_id>', methods=['GET'])
 @jwt_required()
 def get_store(store_id):
@@ -36,8 +46,16 @@ def get_store(store_id):
     store = Store.query.filter_by(id=store_id, merchant_id=merchant_id).first()
     if not store:
         return jsonify({'message': 'Store not found'}), 404
-    return jsonify(store.to_dict()), 200
-
+    
+    # Manually construct the response data
+    store_data = {
+        'id': store.id,
+        'name': store.name,
+        'location': store.location,
+        'merchant_id': store.merchant_id
+    }
+    
+    return jsonify(store_data), 200
 # Update a store (only if it belongs to the merchant)
 @store_bp.route('/stores/<int:store_id>', methods=['PUT'])
 @jwt_required()
