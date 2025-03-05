@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 
 const SalesForm = () => {
   const [inventory, setInventory] = useState([]);
+  const [sales, setSales] = useState([]); // State to hold sales data
   const [selectedProduct, setSelectedProduct] = useState("");
   const [quantity, setQuantity] = useState("");
   const [totalPrice, setTotalPrice] = useState("");
   const [message, setMessage] = useState("");
 
+  // Fetch inventory data
   useEffect(() => {
     const fetchInventory = async () => {
       try {
@@ -35,6 +37,38 @@ const SalesForm = () => {
     };
 
     fetchInventory();
+  }, []);
+
+  // Fetch sales data
+  const fetchSales = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setMessage("Unauthorized: Please log in.");
+        return;
+      }
+
+      const response = await fetch("https://my-duka-project-g25b.onrender.com/sales", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch sales.");
+      }
+
+      const data = await response.json();
+      setSales(data.sales); // Set the sales data
+    } catch (err) {
+      console.error("Error fetching sales:", err);
+      setMessage("Error loading sales.");
+    }
+  };
+
+  // Call fetchSales when the component mounts
+  useEffect(() => {
+    fetchSales();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -70,6 +104,8 @@ const SalesForm = () => {
         setQuantity("");
         setTotalPrice("");
         setSelectedProduct("");
+        // Refetch sales data here to update the list
+        fetchSales();
       } else {
         setMessage(data.message || "Error recording sale.");
       }
@@ -108,6 +144,16 @@ const SalesForm = () => {
         <br />
         <button type="submit">Submit Sale</button>
       </form>
+
+      {/* Display Sales Data */}
+      <h3>Sales Records</h3>
+      <ul>
+        {sales.map((sale) => (
+          <li key={sale.id}>
+            Product ID: {sale.inventory_id}, Quantity Sold: {sale.quantity_sold}, Total Price: {sale.total_price}, Sale Date: {new Date(sale.sale_date).toLocaleString()}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

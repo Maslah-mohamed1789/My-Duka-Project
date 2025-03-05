@@ -8,10 +8,10 @@ import RegisterClerk from './components/Auth/RegisterClerk';
 import InviteAdmin from './components/Auth/InviteAdmin';
 import RegisterWithToken from './components/Auth/RegisterWithToken';
 import AdminDashboard from './components/Dashboard/AdminDashboard';
-import MerchantDashboard from './components/Dashboard/MerchantDashboard'; // Updated path
+import MerchantDashboard from './components/Dashboard/MerchantDashboard';
 import ClerkDashboard from './components/Dashboard/ClerkDashboard';
-import NotFound from './pages/NotFound';
-import ErrorBoundary from './components/ErrorBoundary'; // Import your ErrorBoundary
+
+import ErrorBoundary from './components/ErrorBoundary';
 
 const App = () => {
   const userRole = useSelector((state) => state.auth.user?.role); // Get user role from Redux store
@@ -20,7 +20,7 @@ const App = () => {
   return (
     <Router>
       <Navbar />
-      <ErrorBoundary> {/* Wrap your Routes with ErrorBoundary */}
+      <ErrorBoundary>
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/login" element={<Login />} />
@@ -39,7 +39,7 @@ const App = () => {
             <Route path="/dashboard/*" element={<ClerkDashboard />} />
           )}
           
-          <Route path="*" element={<NotFound />} />
+          
         </Routes>
       </ErrorBoundary>
     </Router>

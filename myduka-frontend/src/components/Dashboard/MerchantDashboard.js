@@ -11,6 +11,7 @@ import AssignInventory from '../Inventory/AssignInventory';
 import MerchantPayments from '../Payment/MerchantPayment';
 import MerchantReport from '../Report/MerchantReport';
 import SalesForm from '../Sales/SalesForm';
+import StoreManagement from '../Store/StoreManagement';
 import './MerchantDashboard.css';
 
 const MerchantDashboard = () => {
@@ -27,6 +28,7 @@ const MerchantDashboard = () => {
             <div className="sidebar">
                 <h2>Merchant Dashboard</h2>
                 <ul>
+                <li><Link to="/dashboard/store">Stores</Link></li>
                     <li><Link to="/dashboard/inventory">Inventory Management</Link></li>
                     <li><Link to="/dashboard/payments">Payments</Link></li>
                     <li><Link to="/dashboard/reports">Reports</Link></li>
@@ -44,6 +46,7 @@ const MerchantDashboard = () => {
                     <Route path="inventory/assign" element={<AssignInventory />} />
                     <Route path="payments" element={<MerchantPayments />} />
                     <Route path="sales" element={<SalesForm />} />
+                    <Route path="store" element={<StoreManagement />} />
                     
                     <Route path="reports" element={<MerchantReport />} />
                     <Route path="admins" element={<AdminList />} />

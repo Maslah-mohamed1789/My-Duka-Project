@@ -1,0 +1,35 @@
+/* Sales Records Title */
+h3 {
+  text-align: center;
+  font-size: 1.5rem;
+  color: #333;
+  margin-top: 20px;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 5px;
+  display: inline-block;
+}
+
+/* Sales Records List */
+ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 15px;
+}
+
+/* Sales Record Item */
+li {
+  background: #ffffff;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.4;
+}
+
+/* Alternate Row Styling */
+li:nth-child(even) {
+  background: #f8f9fa;
+}

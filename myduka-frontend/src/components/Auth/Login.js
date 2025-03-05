@@ -12,13 +12,18 @@ const Login = () => {
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault(); // Prevent the default form submission
         const credentials = { email, password };
+
         try {
+            // Attempt to log in with the provided credentials
             const response = await dispatch(login(credentials)).unwrap();
-            localStorage.setItem('token', response.access_token); // Store the token correctly
-            navigate('/dashboard'); // Navigate to the dashboard route
+            // Store the token in local storage upon successful login
+            localStorage.setItem('token', response.access_token);
+            // Navigate to the dashboard route
+            navigate('/dashboard');
         } catch (error) {
+            // Set the error message if login fails
             setError(error.message || 'Login failed, please try again.');
         }
     };
@@ -45,7 +50,7 @@ const Login = () => {
                     />
                     <button type="submit" className="button">Login</button>
                 </form>
-                {error && <div className="error-message">{error}</div>}
+                {error && <div className="error-message">{error}</div>} {/* Display error message if any */}
             </div>
         </div>
     );
