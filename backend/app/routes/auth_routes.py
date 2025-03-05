@@ -11,54 +11,57 @@ auth_bp = Blueprint('auth', __name__)
 def create_serializer(secret_key):
     return URLSafeTimedSerializer(secret_key)
 
-@auth_bp.route('/register_merchant', methods=['POST'])
-def register_merchant():
+@auth_bp.route('/register', methods=['POST'])
+@jwt_required(optional=True)  # Allows unauthenticated users to register as merchants
+def register():
     """
-    Allows a new Merchant to register themselves.
+    Registers a new user based on role:
+    - Merchant: Can self-register
+    - Clerk: Can be added by an Admin
+    - Admin: Needs an invitation token from a Merchant
     """
+    user_id = get_jwt_identity()  # Get the logged-in user (if any)
+    current_user = User.query.get(user_id) if user_id else None
+    
     data = request.get_json()
-
-    # Check if email is already in use
-    existing_user = User.query.filter_by(email=data['email']).first()
-    if existing_user:
+    role = data.get('role', '').lower()
+    
+    # Check for existing email
+    if User.query.filter_by(email=data['email']).first():
         return jsonify({'message': 'Email already registered'}), 400
 
-    # Hash password
     hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
 
-    # Create new merchant
-    merchant = User(
-        username=data['username'],
-        email=data['email'],
-        password_hash=hashed_password,
-        role='merchant'
-    )
+    if role == 'merchant':
+        if current_user:  
+            return jsonify({'message': 'Merchants self-register, not by Admins'}), 403
+        user = User(username=data['username'], email=data['email'], password_hash=hashed_password, role='merchant')
 
-    db.session.add(merchant)
-    db.session.commit()
+    elif role == 'clerk':
+        if not current_user or current_user.role.lower() != 'admin':
+            return jsonify({'message': 'Only Admins can add Clerks'}), 403
+        user = User(username=data['username'], email=data['email'], password_hash=hashed_password, role='clerk')
 
-    return jsonify({'message': 'Merchant registered successfully'}), 201
+    elif role == 'admin':
+        token = data.get('token')  
+        if not token:
+            return jsonify({'message': 'Admins require an invitation token'}), 403
+        try:
+            s = create_serializer(app.config['SECRET_KEY'])
+            email = s.loads(token, salt='admin-registration', max_age=3600)
+            if email != data['email']:
+                return jsonify({'message': 'Token email mismatch'}), 403
+        except Exception:
+            return jsonify({'message': 'Invalid or expired token'}), 400
+        user = User(username=data['username'], email=email, password_hash=hashed_password, role='admin')
 
+    else:
+        return jsonify({'message': 'Invalid role'}), 400
 
-# User registration (only Admins can add Clerks)
-@auth_bp.route('/register_clerk', methods=['POST'])
-@jwt_required()
-def register_clerk():
-    """
-    Allows an Admin to register a new Clerk.
-    """
-    user_id = get_jwt_identity()
-    current_user = User.query.get(user_id)
-    
-    if current_user.role.lower() != 'admin':
-        return jsonify({'message': 'Only Admins can add Clerks'}), 403
-    
-    data = request.get_json()
-    hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
-    user = User(username=data['username'], email=data['email'], password_hash=hashed_password, role='clerk')
     db.session.add(user)
     db.session.commit()
-    return jsonify({'message': 'Clerk registered successfully'}), 201
+    return jsonify({'message': f'{role.capitalize()} registered successfully'}), 201
+
 
 # User login
 @auth_bp.route('/login', methods=['POST'])
@@ -107,23 +110,7 @@ def send_invitation_email(email, token):
     msg.body = f'Click the link to register: {link}'
     mail.send(msg)
 
-@auth_bp.route('/register_with_token/<token>', methods=['POST'])
-def register_with_token(token):
-    """
-    Allows a new Admin to register using the token sent via email.
-    """
-    s = create_serializer(app.config['SECRET_KEY'])
-    try:
-        email = s.loads(token, salt='admin-registration', max_age=3600)  # Decode the token
-    except Exception as e:
-        return jsonify({'message': 'Invalid or expired token'}), 400  # Handle invalid token
 
-    data = request.get_json()
-    hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
-    user = User(username=data['username'], email=email, password_hash=hashed_password, role='admin')
-    db.session.add(user)
-    db.session.commit()
-    return jsonify({'message': 'Admin registered successfully'}), 201
 
 @auth_bp.route('/users', methods=['GET'])
 @jwt_required()
