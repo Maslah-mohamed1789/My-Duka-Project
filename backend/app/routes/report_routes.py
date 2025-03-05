@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app import db
 from app.models import Report, User, Inventory, SalesTransaction, Store
-from datetime import datetime, timedelta
+from datetime import datetime
 from sqlalchemy import or_
 from sqlalchemy.orm import aliased
 
@@ -113,55 +113,11 @@ def store_performance(store_id):
         "inventory_status": inventory_data
     }), 200
 
-
-
-@report_bp.route('/admin_reports', methods=['GET'])
-@jwt_required()
-def admin_reports():
-    """
-    Admin can see a detailed report on individual store performance with weekly, monthly, and annual filters.
-    """
-    user_id = get_jwt_identity()
-    user = User.query.get(user_id)
-
-    if user.role.lower() != 'admin':
-        return jsonify({"error": "Unauthorized"}), 403
-
-    report_type = request.args.get("report_type", "").lower()
-    today = datetime.utcnow()
-
-    # Define date filters
-    if report_type == "weekly":
-        start_date = today - timedelta(days=7)
-    elif report_type == "monthly":
-        start_date = today.replace(day=1)  # Start of the month
-    elif report_type == "annual":
-        start_date = today.replace(month=1, day=1)  # Start of the year
-    else:
-        return jsonify({"error": "Invalid report type. Use 'weekly', 'monthly', or 'annual'"}), 400
-
-    store_reports = (
-        db.session.query(
-            Store.id, Store.name, db.func.sum(Report.total_sales).label('total_sales')
-        )
-        .join(Report, Report.store_id == Store.id)
-        .filter(Report.created_at >= start_date)  # Filtering based on report creation date
-        .group_by(Store.id, Store.name)
-        .order_by(db.desc('total_sales'))
-        .all()
-    )
-
-    return jsonify({
-        "report_type": report_type,
-        "admin_reports": [{"store_id": s[0], "store_name": s[1], "total_sales": s[2]} for s in store_reports]
-    }), 200
-
-
 @report_bp.route('/merchant_reports', methods=['GET'])
 @jwt_required()
 def merchant_reports():
     """
-    Get reports for merchants with weekly, monthly, and annual filters.
+    Get reports for merchants with store-by-store and product performance in graphs.
     """
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
@@ -169,35 +125,55 @@ def merchant_reports():
     if user.role.lower() != 'merchant':
         return jsonify({"error": "Unauthorized"}), 403
 
-    report_type = request.args.get("report_type", "").lower()
-    today = datetime.utcnow()
-
-    # Define date filters
-    if report_type == "weekly":
-        start_date = today - timedelta(days=7)
-    elif report_type == "monthly":
-        start_date = today.replace(day=1)
-    elif report_type == "annual":
-        start_date = today.replace(month=1, day=1)
-    else:
-        return jsonify({"error": "Invalid report type. Use 'weekly', 'monthly', or 'annual'"}), 400
-
+    # Fix: Use merchant_id instead of owner_id
     stores = Store.query.filter_by(merchant_id=user.id).all()
     report_data = []
 
     for store in stores:
-        store_sales = (
-            db.session.query(db.func.sum(Report.total_sales))
-            .filter(Report.store_id == store.id, Report.created_at >= start_date)
-            .scalar() or 0
+        store_sales = db.session.query(db.func.sum(SalesTransaction.total_price)).join(Inventory).filter(
+            Inventory.store_id == store.id
+        ).scalar() or 0
+
+        products = (
+            db.session.query(
+                Inventory.product_name, db.func.sum(SalesTransaction.quantity_sold).label('total_sold')
+            )
+            .join(SalesTransaction)
+            .filter(Inventory.store_id == store.id)
+            .group_by(Inventory.product_name)
+            .order_by(db.desc('total_sold'))
+            .all()
         )
 
         report_data.append({
             "store_name": store.name,
             "total_sales": store_sales,
+            "top_products": [{"product": p[0], "total_sold": p[1]} for p in products]
         })
 
-    return jsonify({
-        "report_type": report_type,
-        "merchant_reports": report_data
-    }), 200
+    return jsonify({"merchant_reports": report_data}), 200
+
+@report_bp.route('/admin_reports', methods=['GET'])
+@jwt_required()
+def admin_reports():
+    """
+    Admin can see a detailed report on individual store performance with graphical data.
+    """
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+
+    if user.role.lower() != 'admin':
+        return jsonify({"error": "Unauthorized"}), 403
+
+    store_reports = (
+        db.session.query(
+            Store.id, Store.name, db.func.sum(SalesTransaction.total_price).label('total_sales')
+        )
+        .outerjoin(Inventory, Inventory.store_id == Store.id)
+        .outerjoin(SalesTransaction, SalesTransaction.inventory_id == Inventory.id)
+        .group_by(Store.id, Store.name)
+        .order_by(db.desc('total_sales'))
+        .all()
+    )
+
+    return jsonify({"admin_reports": [{"store_id": s[0], "store_name": s[1], "total_sales": s[2]} for s in store_reports]}), 200
