@@ -1,5 +1,3 @@
-# app/routes/store_routes.py
-
 from flask import Blueprint, request, jsonify
 from app import db
 from app.models import Store  # Make sure to import your Store model
@@ -12,47 +10,58 @@ store_bp = Blueprint('store', __name__)
 @jwt_required()
 def create_store():
     data = request.get_json()
+    merchant_id = get_jwt_identity()
     new_store = Store(
         name=data['name'],
         location=data['location'],
-        merchant_id=get_jwt_identity()  # Assuming the merchant ID is the JWT identity
+        merchant_id=merchant_id  # Ensure store is linked to the authenticated merchant
     )
     db.session.add(new_store)
     db.session.commit()
     return jsonify({'message': 'Store created', 'store_id': new_store.id}), 201
 
-# Get all stores
+# Get all stores for the authenticated merchant
 @store_bp.route('/stores', methods=['GET'])
 @jwt_required()
 def get_stores():
-    stores = Store.query.all()
+    merchant_id = get_jwt_identity()
+    stores = Store.query.filter_by(merchant_id=merchant_id).all()
     return jsonify([store.to_dict() for store in stores]), 200
 
-# Get a specific store by ID
+# Get a specific store by ID (only if it belongs to the merchant)
 @store_bp.route('/stores/<int:store_id>', methods=['GET'])
 @jwt_required()
 def get_store(store_id):
-    store = Store.query.get_or_404(store_id)
+    merchant_id = get_jwt_identity()
+    store = Store.query.filter_by(id=store_id, merchant_id=merchant_id).first()
+    if not store:
+        return jsonify({'message': 'Store not found'}), 404
     return jsonify(store.to_dict()), 200
 
-# Update a store
+# Update a store (only if it belongs to the merchant)
 @store_bp.route('/stores/<int:store_id>', methods=['PUT'])
 @jwt_required()
 def update_store(store_id):
-    store = Store.query.get_or_404(store_id)
+    merchant_id = get_jwt_identity()
+    store = Store.query.filter_by(id=store_id, merchant_id=merchant_id).first()
+    if not store:
+        return jsonify({'message': 'Store not found or unauthorized'}), 403
+    
     data = request.get_json()
     store.name = data.get('name', store.name)
     store.location = data.get('location', store.location)
     db.session.commit()
     return jsonify({'message': 'Store updated'}), 200
 
-# Delete a store
+# Delete a store (only if it belongs to the merchant)
 @store_bp.route('/stores/<int:store_id>', methods=['DELETE'])
 @jwt_required()
 def delete_store(store_id):
-    store = Store.query.get_or_404(store_id)
+    merchant_id = get_jwt_identity()
+    store = Store.query.filter_by(id=store_id, merchant_id=merchant_id).first()
+    if not store:
+        return jsonify({'message': 'Store not found or unauthorized'}), 403
+    
     db.session.delete(store)
     db.session.commit()
     return jsonify({'message': 'Store deleted'}), 200
-
-    
