@@ -26,7 +26,7 @@ const InventoryList = () => {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://127.0.0.1:5000/inventory/${id}`, {
+            await axios.delete(`https://my-duka-project-g25b.onrender.com/inventory/${id}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
