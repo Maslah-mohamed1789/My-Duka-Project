@@ -80,16 +80,18 @@ def add_inventory():
 @jwt_required()
 def get_inventory():
     """
-    Allows Admins and Merchants to view all inventory items.
-    Clerks can only view inventory items assigned to them.
+    Allows Admins and Merchants to view their own inventory items.
+    Clerks can only view inventory assigned to them.
     """
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
 
-    if user.role.lower() in ['merchant', 'admin']:
-        inventory = Inventory.query.all()  # Get all inventory items
+    if user.role.lower() == 'merchant':
+        inventory = Inventory.query.filter_by(store_admin_id=user.id).all()
+    elif user.role.lower() == 'admin':
+        inventory = Inventory.query.all()  # Admins can see all inventory
     elif user.role.lower() == 'clerk':
-        inventory = user.managed_inventories  # Get assigned inventory items
+        inventory = user.managed_inventories  # Assigned inventory for clerks
     else:
         return jsonify({'message': 'Unauthorized'}), 403
 
