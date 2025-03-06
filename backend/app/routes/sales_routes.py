@@ -46,22 +46,15 @@ def create_sale():
 @sales_bp.route('', methods=['GET'])
 @jwt_required()
 def get_sales():
-    """ Retrieve sales transactions. Each admin sees only their own store's sales, and merchants see their store sales. """
+    """ Retrieve all sales transactions. Admins see all, merchants see their store sales. """
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
-
-    if not user:
-        return jsonify({'message': 'Unauthorized'}), 403
-
+    
     if user.role.lower() == 'admin':
-        # Admins only see sales for inventories they manage
-        sales = SalesTransaction.query.join(Inventory).filter(Inventory.admin_id == user.id).all()
-    elif user.role.lower() == 'merchant':
-        # Merchants only see sales from their store
-        sales = SalesTransaction.query.join(Inventory).filter(Inventory.store_admin_id == user.id).all()
+        sales = SalesTransaction.query.all()
     else:
-        return jsonify({'message': 'Unauthorized'}), 403
-
+        sales = SalesTransaction.query.join(Inventory).filter(Inventory.store_admin_id == user.id).all()
+    
     sales_data = [
         {
             'id': sale.id,
@@ -72,9 +65,8 @@ def get_sales():
         }
         for sale in sales
     ]
-
+    
     return jsonify({'sales': sales_data}), 200
-
 
 
 @sales_bp.route('/<int:sale_id>', methods=['GET'])

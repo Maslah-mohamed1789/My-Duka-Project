@@ -68,71 +68,24 @@ def generate_report():
 
     return jsonify({'message': 'Report generated successfully', 'report_data': report_data}), 201
 
-# @report_bp.route('/store_performance/<int:store_id>', methods=['GET'])
-# @jwt_required()
-# def store_performance(store_id):
-#     """
-#     Get store performance, including total sales, top-selling products, and inventory breakdown.
-#     """
-#     user_id = get_jwt_identity()
-#     user = User.query.get(user_id)
-
-#     if not user or user.role.lower() not in ['admin', 'merchant']:
-#         return jsonify({"error": "Unauthorized"}), 403
-
-#     if user.role.lower() == "merchant" and user.store_id != store_id:
-#         return jsonify({"error": "Unauthorized access to this store"}), 403
-
-#     store = Store.query.get(store_id)
-#     if not store:
-#         return jsonify({"error": "Store not found"}), 404
-
-#     total_sales = db.session.query(db.func.sum(SalesTransaction.total_price)).join(Inventory).filter(
-#         Inventory.store_id == store_id
-#     ).scalar() or 0
-
-#     top_products = (
-#         db.session.query(Inventory.product_name, db.func.sum(SalesTransaction.quantity_sold).label('total_sold'))
-#         .join(SalesTransaction).filter(Inventory.store_id == store_id)
-#         .group_by(Inventory.product_name)
-#         .order_by(db.desc('total_sold'))
-#         .limit(5)
-#         .all()
-#     )
-#     top_products_data = [{"product": p[0], "total_sold": p[1]} for p in top_products]
-
-#     inventory_status = Inventory.query.filter_by(store_id=store_id).with_entities(
-#         Inventory.product_name, Inventory.quantity_in_stock
-#     ).all()
-#     inventory_data = [{"product": item[0], "stock": item[1]} for item in inventory_status]
-
-#     return jsonify({
-#         "store_id": store_id,
-#         "total_sales": total_sales,
-#         "top_products": top_products_data,
-#         "inventory_status": inventory_data
-#     }), 200
-
 @report_bp.route('/store_performance/<int:store_id>', methods=['GET'])
 @jwt_required()
 def store_performance(store_id):
     """
-    Only allow admins to see reports for stores they manage and merchants to see their own store.
+    Get store performance, including total sales, top-selling products, and inventory breakdown.
     """
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
 
+    if not user or user.role.lower() not in ['admin', 'merchant']:
+        return jsonify({"error": "Unauthorized"}), 403
+
+    if user.role.lower() == "merchant" and user.store_id != store_id:
+        return jsonify({"error": "Unauthorized access to this store"}), 403
+
     store = Store.query.get(store_id)
     if not store:
         return jsonify({"error": "Store not found"}), 404
-
-    # Admins can only access reports of stores they manage
-    if user.role.lower() == "admin" and store.admin_id != user.id:
-        return jsonify({"error": "Unauthorized to access this store’s report"}), 403
-
-    # Merchants can only see their own store's reports
-    if user.role.lower() == "merchant" and store.merchant_id != user.id:
-        return jsonify({"error": "Unauthorized access to this store"}), 403
 
     total_sales = db.session.query(db.func.sum(SalesTransaction.total_price)).join(Inventory).filter(
         Inventory.store_id == store_id
@@ -140,8 +93,7 @@ def store_performance(store_id):
 
     top_products = (
         db.session.query(Inventory.product_name, db.func.sum(SalesTransaction.quantity_sold).label('total_sold'))
-        .join(SalesTransaction)
-        .filter(Inventory.store_id == store_id)
+        .join(SalesTransaction).filter(Inventory.store_id == store_id)
         .group_by(Inventory.product_name)
         .order_by(db.desc('total_sold'))
         .limit(5)
@@ -202,36 +154,11 @@ def merchant_reports():
 
     return jsonify({"merchant_reports": report_data}), 200
 
-# @report_bp.route('/admin_reports', methods=['GET'])
-# @jwt_required()
-# def admin_reports():
-#     """
-#     Admin can see a detailed report on individual store performance with graphical data.
-#     """
-#     user_id = get_jwt_identity()
-#     user = User.query.get(user_id)
-
-#     if user.role.lower() != 'admin':
-#         return jsonify({"error": "Unauthorized"}), 403
-
-#     store_reports = (
-#         db.session.query(
-#             Store.id, Store.name, db.func.sum(SalesTransaction.total_price).label('total_sales')
-#         )
-#         .outerjoin(Inventory, Inventory.store_id == Store.id)
-#         .outerjoin(SalesTransaction, SalesTransaction.inventory_id == Inventory.id)
-#         .group_by(Store.id, Store.name)
-#         .order_by(db.desc('total_sales'))
-#         .all()
-#     )
-
-#     return jsonify({"admin_reports": [{"store_id": s[0], "store_name": s[1], "total_sales": s[2]} for s in store_reports]}), 200
-
 @report_bp.route('/admin_reports', methods=['GET'])
 @jwt_required()
 def admin_reports():
     """
-    Admins can only see reports for stores they manage.
+    Admin can see a detailed report on individual store performance with graphical data.
     """
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
@@ -239,19 +166,16 @@ def admin_reports():
     if user.role.lower() != 'admin':
         return jsonify({"error": "Unauthorized"}), 403
 
-    # Only get stores that the admin manages
     store_reports = (
         db.session.query(
             Store.id, Store.name, db.func.sum(SalesTransaction.total_price).label('total_sales')
         )
-        .join(Inventory, Inventory.store_id == Store.id)
-        .join(SalesTransaction, SalesTransaction.inventory_id == Inventory.id)
-        .filter(Store.admin_id == user.id)  # Only stores assigned to this admin
+        .outerjoin(Inventory, Inventory.store_id == Store.id)
+        .outerjoin(SalesTransaction, SalesTransaction.inventory_id == Inventory.id)
         .group_by(Store.id, Store.name)
         .order_by(db.desc('total_sales'))
         .all()
     )
 
-    return jsonify({
-        "admin_reports": [{"store_id": s[0], "store_name": s[1], "total_sales": s[2] or 0} for s in store_reports]
-    }), 200
+    return jsonify({"admin_reports": [{"store_id": s[0], "store_name": s[1], "total_sales": s[2]} for s in store_reports]}), 200
+
