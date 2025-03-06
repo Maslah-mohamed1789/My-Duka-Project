@@ -47,38 +47,30 @@ def create_sale():
 @jwt_required()
 def get_supply_requests():
     """
-    Retrieve supply requests. Admins see only their requests.
-    Merchants see only requests related to their store.
+    Allows Admins to view all supply requests.
+    Clerks can only view their own supply requests.
     """
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
 
-    if not user:
-        return jsonify({'message': 'Unauthorized'}), 403
-
-    # Admins can only view supply requests they processed
     if user.role.lower() == 'admin':
-        supply_requests = SupplyRequest.query.filter_by(processed_by=user_id).all()
-    
-    # Merchants can only view supply requests for their store
-    elif user.role.lower() == 'merchant':
-        supply_requests = SupplyRequest.query.filter_by(store_admin_id=user_id).all()
-    
+        requests = SupplyRequest.query.all()
+    elif user.role.lower() == 'clerk':
+        requests = SupplyRequest.query.filter_by(clerk_id=user_id).all()
     else:
         return jsonify({'message': 'Unauthorized'}), 403
 
-    supply_data = [
-        {
-            'id': request.id,
-            'inventory_id': request.inventory_id,
-            'quantity_requested': request.quantity_requested,
-            'status': request.status,
-            'processed_by': request.processed_by
-        }
-        for request in supply_requests
-    ]
+    request_list = [{
+        'id': req.id,
+        'product_name': req.product_name,
+        'quantity_requested': req.quantity_requested,
+        'status': req.status,
+        'clerk_id': req.clerk_id,
+        'admin_id': req.admin_id
+    } for req in requests]
 
-    return jsonify({'supply_requests': supply_data}), 200
+    return jsonify({"supply_requests": request_list}), 200
+
 
 @sales_bp.route('/<int:sale_id>', methods=['GET'])
 @jwt_required()
