@@ -30,7 +30,7 @@ const MerchantPayments = () => {
   const handlePayment = (e) => {
     e.preventDefault();
 
-    fetch("http://127.0.0.1:5000/payment", {
+    fetch("https://my-duka-project-g25b.onrender.com/payment", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
