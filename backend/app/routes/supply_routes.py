@@ -34,20 +34,15 @@ def request_supply():
 @jwt_required()
 def get_supply_requests():
     """
-    Admins only see supply requests they approved.
-    Clerks only see their own supply requests.
+    Allows Admins to view all supply requests.
+    Clerks can only view their own supply requests.
     """
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
 
-    if not user:
-        return jsonify({'message': 'Unauthorized'}), 403
-
     if user.role.lower() == 'admin':
-        # Admins only see supply requests they processed
-        requests = SupplyRequest.query.filter_by(admin_id=user_id).all()
+        requests = SupplyRequest.query.all()
     elif user.role.lower() == 'clerk':
-        # Clerks only see their own requests
         requests = SupplyRequest.query.filter_by(clerk_id=user_id).all()
     else:
         return jsonify({'message': 'Unauthorized'}), 403
@@ -62,6 +57,7 @@ def get_supply_requests():
     } for req in requests]
 
     return jsonify({"supply_requests": request_list}), 200
+
 
 # Update a supply request
 @supply_bp.route('/<int:request_id>', methods=['PUT'])
