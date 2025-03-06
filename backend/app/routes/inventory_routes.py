@@ -302,3 +302,4 @@ def inventory_payment_status():
     inventory_data = [{"id": i.id, "product_name": i.product_name, "quantity": i.quantity_in_stock} for i in inventory_items]
 
     return jsonify({"inventory": inventory_data}), 200
+
