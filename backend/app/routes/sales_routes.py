@@ -43,30 +43,42 @@ def create_sale():
     
     return jsonify({'message': 'Sale recorded successfully', 'sale_id': new_sale.id}), 201
 
-@sales_bp.route('', methods=['GET'])
+@supply_bp.route('', methods=['GET'])
 @jwt_required()
-def get_sales():
-    """ Retrieve all sales transactions. Admins see all, merchants see their store sales. """
+def get_supply_requests():
+    """
+    Retrieve supply requests. Admins see only their requests.
+    Merchants see only requests related to their store.
+    """
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
-    
+
+    if not user:
+        return jsonify({'message': 'Unauthorized'}), 403
+
+    # Admins can only view supply requests they processed
     if user.role.lower() == 'admin':
-        sales = SalesTransaction.query.all()
+        supply_requests = SupplyRequest.query.filter_by(processed_by=user_id).all()
+    
+    # Merchants can only view supply requests for their store
+    elif user.role.lower() == 'merchant':
+        supply_requests = SupplyRequest.query.filter_by(store_admin_id=user_id).all()
+    
     else:
-        sales = SalesTransaction.query.join(Inventory).filter(Inventory.store_admin_id == user.id).all()
-    
-    sales_data = [
+        return jsonify({'message': 'Unauthorized'}), 403
+
+    supply_data = [
         {
-            'id': sale.id,
-            'inventory_id': sale.inventory_id,
-            'quantity_sold': sale.quantity_sold,
-            'total_price': sale.total_price,
-            'sale_date': sale.sale_date
+            'id': request.id,
+            'inventory_id': request.inventory_id,
+            'quantity_requested': request.quantity_requested,
+            'status': request.status,
+            'processed_by': request.processed_by
         }
-        for sale in sales
+        for request in supply_requests
     ]
-    
-    return jsonify({'sales': sales_data}), 200
+
+    return jsonify({'supply_requests': supply_data}), 200
 
 @sales_bp.route('/<int:sale_id>', methods=['GET'])
 @jwt_required()

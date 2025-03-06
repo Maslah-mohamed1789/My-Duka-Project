@@ -30,20 +30,24 @@ def request_supply():
     db.session.commit()
     return jsonify({'message': 'Supply request submitted successfully'}), 201
 
-# Get all supply requests
 @supply_bp.route('', methods=['GET'])
 @jwt_required()
 def get_supply_requests():
     """
-    Allows Admins to view all supply requests.
-    Clerks can only view their own supply requests.
+    Admins only see supply requests they approved.
+    Clerks only see their own supply requests.
     """
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
 
+    if not user:
+        return jsonify({'message': 'Unauthorized'}), 403
+
     if user.role.lower() == 'admin':
-        requests = SupplyRequest.query.all()
+        # Admins only see supply requests they processed
+        requests = SupplyRequest.query.filter_by(admin_id=user_id).all()
     elif user.role.lower() == 'clerk':
+        # Clerks only see their own requests
         requests = SupplyRequest.query.filter_by(clerk_id=user_id).all()
     else:
         return jsonify({'message': 'Unauthorized'}), 403

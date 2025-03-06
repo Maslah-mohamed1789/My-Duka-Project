@@ -59,22 +59,27 @@ def process_payment():
             'amount': new_payment.amount  # Return the amount as part of the response
         }
     }), 201
-# Get all payments
-# Get all payments
 @payment_bp.route('', methods=['GET'])
 @jwt_required()
 def get_payments():
     """
-    Allows Admins to view all payments.
+    Allows Admins to view only their own payments.
     Merchants can only view their own payments.
     """
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
 
+    if not user:
+        return jsonify({'message': 'Unauthorized'}), 403
+
+    # Admins can ONLY view payments they processed
     if user.role.lower() == 'admin':
-        payments = Payment.query.all()
+        payments = Payment.query.filter_by(processed_by=user_id).all()
+    
+    # Merchants can ONLY view payments they processed
     elif user.role.lower() == 'merchant':
         payments = Payment.query.filter_by(processed_by=user_id).all()
+    
     else:
         return jsonify({'message': 'Unauthorized'}), 403
 
@@ -83,7 +88,7 @@ def get_payments():
         'inventory_id': payment.inventory_id,
         'status': payment.status,
         'processed_by': payment.processed_by,
-        'amount': payment.amount  # Include the amount in the response
+        'amount': payment.amount  
     } for payment in payments]
 
     return jsonify({"payments": payment_list}), 200
