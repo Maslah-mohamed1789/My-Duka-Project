@@ -41,7 +41,7 @@ const AssignedInventory = () => {
                             <th>Selling Price ($)</th>
                             <th>Payment Status</th>
                             <th>Supplier</th>
-                            <th>Store Admin ID</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -55,7 +55,7 @@ const AssignedInventory = () => {
                                 <td>${item.selling_price.toFixed(2)}</td>
                                 <td>{item.payment_status}</td>
                                 <td>{item.supplier}</td>
-                                <td>{item.store_admin_id}</td>
+                               
                             </tr>
                         ))}
                     </tbody>

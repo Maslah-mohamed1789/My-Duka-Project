@@ -4,9 +4,10 @@ import './payment.css'; // Import the CSS file
 
 const PaymentList = () => {
     const [payments, setPayments] = useState([]);
-    const [inventoryId, setInventoryId] = useState('');
+    const [inventoryItems, setInventoryItems] = useState([]);  // Fetch inventory items
+    const [selectedInventoryId, setSelectedInventoryId] = useState('');
     const [status, setStatus] = useState('Pending');
-    const [amount, setAmount] = useState('');  // New state for amount
+    const [amount, setAmount] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [postError, setPostError] = useState('');
@@ -24,7 +25,22 @@ const PaymentList = () => {
                 setError(error.response ? error.response.data.message : 'Failed to fetch payments');
             }
         };
+
+        const fetchInventoryItems = async () => {
+            try {
+                const response = await axios.get('https://my-duka-project-g25b.onrender.com/inventory', {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                setInventoryItems(response.data.inventory || []);  // Assuming the API returns an array
+            } catch (error) {
+                console.error('Error fetching inventory:', error);
+            }
+        };
+
         fetchPayments();
+        fetchInventoryItems();
     }, []);
 
     const handlePostPayment = async (e) => {
@@ -32,9 +48,7 @@ const PaymentList = () => {
         setPostError('');
         setSuccess('');
 
-        // Parse and validate the amount
-        const parsedAmount = parseFloat(amount);  // Convert to a number
-
+        const parsedAmount = parseFloat(amount);
         if (isNaN(parsedAmount) || parsedAmount <= 0) {
             setPostError('Amount must be greater than zero.');
             return;
@@ -42,23 +56,24 @@ const PaymentList = () => {
 
         try {
             const response = await axios.post('https://my-duka-project-g25b.onrender.com/payment', {
-                inventory_id: inventoryId,
+                inventory_id: selectedInventoryId,
                 status: status,
-                amount: parsedAmount // Send the parsed amount along with inventory_id and status
+                amount: parsedAmount
             }, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
             });
 
-            setSuccess(response.data.message);  // Success message
-            // Optionally refresh the payment list after posting
+            setSuccess(response.data.message);
+
+            // Refresh payment list
             const newPaymentsResponse = await axios.get('https://my-duka-project-g25b.onrender.com/payment', {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
             });
-            setPayments(newPaymentsResponse.data.payments);  // Update the payment list
+            setPayments(newPaymentsResponse.data.payments);
         } catch (error) {
             setPostError(error.response ? error.response.data.message : 'Failed to process payment');
         }
@@ -74,13 +89,18 @@ const PaymentList = () => {
             {/* Payment Form for Posting a New Payment */}
             <h3>Process Payment</h3>
             <form onSubmit={handlePostPayment}>
-                <input
-                    type="text"
-                    placeholder="Inventory ID"
-                    value={inventoryId}
-                    onChange={(e) => setInventoryId(e.target.value)}
+                <select
+                    value={selectedInventoryId}
+                    onChange={(e) => setSelectedInventoryId(e.target.value)}
                     required
-                />
+                >
+                    <option value="">Select Inventory Item</option>
+                    {inventoryItems.map(item => (
+                        <option key={item.id} value={item.id}>
+                            {item.name} (ID: {item.id})
+                        </option>
+                    ))}
+                </select>
                 <select value={status} onChange={(e) => setStatus(e.target.value)}>
                     <option value="Pending">Pending</option>
                     <option value="Paid">Paid</option>
@@ -104,7 +124,7 @@ const PaymentList = () => {
                         <th>Inventory ID</th>
                         <th>Status</th>
                         <th>Processed By</th>
-                        <th>Amount</th> {/* New column for Amount */}
+                        <th>Amount</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -114,7 +134,7 @@ const PaymentList = () => {
                             <td>{payment.inventory_id}</td>
                             <td>{payment.status}</td>
                             <td>{payment.processed_by}</td>
-                            <td>{payment.amount}</td> {/* Display Amount */}
+                            <td>{payment.amount}</td>
                         </tr>
                     ))}
                 </tbody>

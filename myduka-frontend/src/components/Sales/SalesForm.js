@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./SalesForm.css"; // Import the CSS file
 
 const SalesForm = () => {
   const [inventory, setInventory] = useState([]);
@@ -97,7 +98,6 @@ const SalesForm = () => {
       });
 
       const data = await response.json();
-      console.log("Response:", data);
 
       if (response.ok) {
         setMessage("Sale recorded successfully!");
@@ -116,12 +116,12 @@ const SalesForm = () => {
   };
 
   return (
-    <div>
+    <div className="sales-container">
       <h2>Record a Sale</h2>
-      {message && <p>{message}</p>}
-      <form onSubmit={handleSubmit}>
-        <label>
-          Select Product:
+      {message && <div className="message">{message}</div>}
+      <div className="form-card">
+        <form onSubmit={handleSubmit}>
+          <label>Select Product:</label>
           <select value={selectedProduct} onChange={(e) => setSelectedProduct(e.target.value)} required>
             <option value="">--Choose a Product--</option>
             {inventory.map((item) => (
@@ -130,30 +130,41 @@ const SalesForm = () => {
               </option>
             ))}
           </select>
-        </label>
-        <br />
-        <label>
-          Quantity Sold:
+
+          <label>Quantity Sold:</label>
           <input type="number" value={quantity} onChange={(e) => setQuantity(e.target.value)} required min="1" />
-        </label>
-        <br />
-        <label>
-          Total Price:
+
+          <label>Total Price:</label>
           <input type="number" step="0.01" value={totalPrice} onChange={(e) => setTotalPrice(e.target.value)} required />
-        </label>
-        <br />
-        <button type="submit">Submit Sale</button>
-      </form>
+
+          <button type="submit">Submit Sale</button>
+        </form>
+      </div>
 
       {/* Display Sales Data */}
       <h3>Sales Records</h3>
-      <ul>
-        {sales.map((sale) => (
-          <li key={sale.id}>
-            Product ID: {sale.inventory_id}, Quantity Sold: {sale.quantity_sold}, Total Price: {sale.total_price}, Sale Date: {new Date(sale.sale_date).toLocaleString()}
-          </li>
-        ))}
-      </ul>
+      <div className="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Product ID</th>
+              <th>Quantity Sold</th>
+              <th>Total Price</th>
+              <th>Sale Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sales.map((sale) => (
+              <tr key={sale.id}>
+                <td>{sale.inventory_id}</td>
+                <td>{sale.quantity_sold}</td>
+                <td>{sale.total_price}</td>
+                <td>{new Date(sale.sale_date).toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

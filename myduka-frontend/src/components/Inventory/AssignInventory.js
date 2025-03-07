@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const AssignInventory = () => {
+    const navigate = useNavigate(); // Initialize navigation
     const [clerks, setClerks] = useState([]);
     const [selectedClerk, setSelectedClerk] = useState('');
     const [selectedInventory, setSelectedInventory] = useState([]);
@@ -13,13 +15,10 @@ const AssignInventory = () => {
         const fetchClerks = async () => {
             try {
                 const response = await axios.get('https://my-duka-project-g25b.onrender.com/users', {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`
-                    }
+                    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
                 });
                 setClerks(response.data.clerks);
             } catch (err) {
-                console.error("Error fetching clerks:", err);
                 setError("Failed to fetch clerks.");
             }
         };
@@ -27,13 +26,10 @@ const AssignInventory = () => {
         const fetchInventory = async () => {
             try {
                 const response = await axios.get('https://my-duka-project-g25b.onrender.com/inventory', {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`
-                    }
+                    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
                 });
                 setInventory(response.data.inventory);
             } catch (err) {
-                console.error("Error fetching inventory:", err);
                 setError("Failed to fetch inventory.");
             }
         };
@@ -58,19 +54,19 @@ const AssignInventory = () => {
 
         try {
             await axios.post('https://my-duka-project-g25b.onrender.com/inventory/assign', {
-                clerk_id: parseInt(selectedClerk, 10), // Ensure it's an integer
+                clerk_id: parseInt(selectedClerk, 10),
                 inventory_ids: selectedInventory
             }, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
-                }
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
 
             setSuccess('Inventory assigned successfully');
             setSelectedClerk('');
             setSelectedInventory([]);
+            
+            // Redirect to inventory after assignment
+            setTimeout(() => navigate('/dashboard/inventory'), 1500);
         } catch (error) {
-            console.error('Error details:', error);
             setError(error.response?.data?.error || 'Failed to assign inventory');
         }
     };

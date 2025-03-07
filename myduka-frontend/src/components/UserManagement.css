@@ -1,56 +1,67 @@
-/* Container for the user management component */
 .user-management-container {
-  margin: 20px;
-  font-family: 'Arial', sans-serif;
+  width: 90%;
+  margin: 20px auto;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
 }
 
-/* Styling for error messages */
+h2 {
+  text-align: center;
+  color: #333;
+}
+
 .error-message {
-  background-color: #f8d7da;
-  color: #721c24;
-  padding: 10px;
-  margin-bottom: 20px;
-  border-radius: 5px;
-  border: 1px solid #f5c6cb;
+  color: red;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 15px;
 }
 
-/* Table Styling */
+/* Style the user table */
 .user-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
 }
 
-.user-table th, .user-table td {
-  padding: 12px 15px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-
+/* Style table headers */
 .user-table th {
-  background-color: #f4f4f9;
-  font-weight: bold;
+  background: #007bff;
+  color: white;
+  font-size: 1.1rem;
+  padding: 12px;
+  text-align: left;
 }
 
-.user-table tr:nth-child(even) {
-  background-color: #f9f9f9;
+/* Add border & spacing for rows */
+.user-table td, .user-table th {
+  border: 1px solid #ddd;
+  padding: 10px;
 }
 
-.user-table tr:hover {
-  background-color: #f1f1f1;
+/* Alternate row colors for better readability */
+.user-table tbody tr:nth-child(even) {
+  background: #f9f9f9;
 }
 
-/* Styling for the delete button */
+/* Hover effect */
+.user-table tbody tr:hover {
+  background: #f1f1f1;
+}
+
+/* Delete button styling */
 .delete-btn {
-  background-color: #e74c3c;
+  background: #dc3545;
   color: white;
   border: none;
-  padding: 6px 12px;
-  border-radius: 5px;
+  padding: 8px 12px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  border-radius: 5px;
+  font-size: 0.9rem;
 }
 
 .delete-btn:hover {
-  background-color: #c0392b;
+  background: #c82333;
 }
