@@ -1,8 +1,0 @@
-Flask
-Flask-SQLAlchemy
-Flask-RESTful
-Flask-JWT-Extended
-Flask-CORS
-Flask-Migrate
-bcrypt  # For password hashing
-python-dotenv  # If you're using a .env file for configuration
